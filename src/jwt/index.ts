@@ -1,5 +1,6 @@
-import { sign } from "jsonwebtoken"
+import { sign, verify } from "jsonwebtoken"
 import Token from "../models/Token"
+import { IUser } from "../models/user"
 
 const createToken = async (payload: any, expiresIn: number) => {
   const key: string = process.env.JWT_SECRET || "12345678sh"
@@ -27,4 +28,9 @@ export async function jwtSignIn(user: any) {
   } catch (error) {
     throw new Error(`JWT jwtSignIn error: ${error}`)
   }
+}
+
+export async function checkToken(token: any): Promise<IUser> {
+  const key: string = process.env.JWT_SECRET || "12345678sh"
+  return verify(token.accessToken, key) as IUser
 }
